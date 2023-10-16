@@ -1,0 +1,5 @@
+tasker.db
+.vscode
+.env
+.ruff_cache
+__pycache__
