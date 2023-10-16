@@ -41,10 +41,10 @@ class EJUser(BaseModel):
 
         return day
 
-    def is_end(self) -> bool:
+    def is_active(self) -> bool:
         if self.token is None:
-            return True
-        return self.token.ended
+            return False
+        return self.token.active
 
     def _get(self, url: str = 'https://elschool.ru/users/diaries/') -> requests.Response:
         return requests.get(

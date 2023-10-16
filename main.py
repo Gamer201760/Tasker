@@ -38,6 +38,7 @@ class Tasker(QMainWindow):
         for user in User.get_all():
             userwid = QListWidgetItem(self.user_list)
             userwid.setText(user.username)
+            # user.ejuser.is_active() if user.ejuser else False
             userwid.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             userwid.setData(999, user)
 

@@ -5,7 +5,7 @@ from pydantic import BaseModel, field_serializer
 
 class JWToken(BaseModel):
     token: str
-    ended: bool = False
+    active: bool = True
 
     def __str__(self) -> str:
         return self.token
@@ -18,5 +18,5 @@ class JWToken(BaseModel):
                 'verify_exp': True
             })
         except exceptions.ExpiredSignatureError:
-            self.ended = True
+            self.active = False
         return token
