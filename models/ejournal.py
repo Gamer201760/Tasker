@@ -14,12 +14,12 @@ class EJUser(BaseModel):
     username: str
 
     def login_ej(self, password: str):
-        res = requests.post(
-            'https://elschool.ru/Logon/Index',
-            data={'login': self.username, 'password': password}
-        )
-        token = res.cookies.get('JWToken')
-        print(token)
+        with requests.Session() as session:
+            session.post(
+                'https://elschool.ru/Logon/Index',
+                data={'login': self.username, 'password': password}
+            )
+        token = session.cookies.get('JWToken')
         if token is None:
             raise UnAuthorized(self.username)
         self.token = JWToken(token=token)
