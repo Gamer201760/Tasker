@@ -15,16 +15,16 @@ class Tasker(QMainWindow):
         self.user_list.clicked.connect(self.user_select)
 
         self.user: User
-        self.login_setup()
+        self.navigate_login()
 
         self.stackedWidget.setCurrentIndex(0)
 
     def user_select(self, payload: QtCore.QModelIndex):
         self.user = payload.data(999)
         self.stackedWidget.setCurrentIndex(1)
-        self.main_setup()
+        self.navigate_main()
 
-    def main_setup(self):
+    def navigate_main(self):
         self.listWidget.clear()
         homeworks = self.user.ejuser.homework(date=datetime.now().date() + timedelta(days=1)) if self.user.ejuser else None
         if homeworks:
@@ -33,7 +33,7 @@ class Tasker(QMainWindow):
                 hwid.setText(f'{homework.name}: {homework.homework}')
                 hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-    def login_setup(self):
+    def navigate_login(self):
         self.user_list.clear()
         for user in User.get_all():
             userwid = QListWidgetItem(self.user_list)
