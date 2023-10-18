@@ -4,8 +4,8 @@ from uuid import UUID
 from pydantic import BaseModel, Field, model_serializer
 
 from core.db import getCon, getCur
-from models.ejournal import EJUser
-from models.token import JWToken
+from model.ejournal import EJUser
+from model.token import JWToken
 
 
 class User(BaseModel):

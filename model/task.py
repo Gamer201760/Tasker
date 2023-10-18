@@ -5,7 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field, field_serializer
 
 from core.db import getCon, getCur
-from models.user import User
+from model.user import User
 
 
 class Task(BaseModel):

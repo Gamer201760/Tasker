@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from pydantic import BaseModel
 
 from core.exceptions import UnAuthorized
-from models.item import Item
-from models.token import JWToken
+from model.item import Item
+from model.token import JWToken
 
 
 class EJUser(BaseModel):

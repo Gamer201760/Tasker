@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>702</height>
+    <width>605</width>
+    <height>723</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -25,7 +25,7 @@
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="styleSheet">
        <string notr="true">border: 0px;
-background-color: rgb(255, 255, 255);</string>
+</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -43,7 +43,6 @@ background-color: rgb(255, 255, 255);</string>
        <property name="styleSheet">
         <string notr="true">QListWidget {
 	font-size: 16px;
-	
 }
 QListWidget::item {
 	margin-top: 5px;
@@ -54,6 +53,12 @@ QListWidget::item {
 }
 QListWidget::item:hover{
 	background: #FED4E7;
+}
+QPushButton#register_btn{
+	color: #0034BB;
+}
+QPushButton#register_btn:hover{
+	color: #0034FF;
 }</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -93,6 +98,25 @@ QListWidget::item:hover{
           </item>
          </widget>
         </item>
+        <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+         <widget class="QPushButton" name="register_btn">
+          <property name="minimumSize">
+           <size>
+            <width>500</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <underline>true</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Добавить нового пользователя</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="main">
@@ -114,7 +138,7 @@ QListWidget::indicator {
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item alignment="Qt::AlignHCenter">
-         <widget class="QListWidget" name="listWidget">
+         <widget class="QListWidget" name="task_list">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
