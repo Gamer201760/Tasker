@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>605</width>
+    <width>596</width>
     <height>723</height>
    </rect>
   </property>
@@ -20,12 +20,143 @@
    <string notr="true">background-color: white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="styleSheet">
+    <string notr="true">border: 0px;
+</string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="leftMargin">
+     <number>5</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>5</number>
+    </property>
+    <property name="bottomMargin">
+     <number>5</number>
+    </property>
+    <item>
+     <widget class="QGroupBox" name="navigate_bar">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+border: 0px;
+}
+QPushButton:hover {
+	background-color: rgba(190, 190, 190, 150);
+}</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="user_btn">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../Downloads/Frame 3.svg</normaloff>../../../../Downloads/Frame 3.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="add_btn">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../Downloads/Plus.svg</normaloff>../../../../Downloads/Plus.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+        <widget class="QPushButton" name="calendar_btn">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../Downloads/calendar.svg</normaloff>../../../../Downloads/calendar.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="settings_btn">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../Downloads/settings.svg</normaloff>../../../../Downloads/settings.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="styleSheet">
-       <string notr="true">border: 0px;
-</string>
+       <string notr="true"/>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -92,8 +223,15 @@ QPushButton#register_btn:hover{
            <property name="text">
             <string>New Item</string>
            </property>
-           <property name="textAlignment">
-            <set>AlignCenter</set>
+          </item>
+          <item>
+           <property name="text">
+            <string>New Item</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>New Item</string>
            </property>
           </item>
          </widget>
