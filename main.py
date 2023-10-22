@@ -2,10 +2,10 @@ import sys
 from datetime import datetime, timedelta
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QApplication, QDialog, QListWidgetItem, QMainWindow
+from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMainWindow
 
 from model.user import User
-from ui.register_dialog import Ui_register_dialog
+from pages.register import RegisterDialog
 
 
 class Tasker(QMainWindow):
@@ -21,10 +21,8 @@ class Tasker(QMainWindow):
         self.navigate_login()
 
     def register(self):
-        dialog = QDialog()
-        dialog.ui = Ui_register_dialog()
-        dialog.ui.setupUi(dialog)
-        dialog.exec_()
+        RegisterDialog().exec_()
+        self.navigate_login()
 
     def user_select(self, payload: QtCore.QModelIndex):
         self.user = payload.data(999)

@@ -14,7 +14,6 @@ class User(BaseModel):
     ejuser: EJUser | None = None
 
     def create(self):
-        print(self.model_dump(mode='json'))
         getCur().execute(
             """
             insert into User(id,username,token,ejusername)
