@@ -32,7 +32,7 @@ class Tasker(QMainWindow):
         self.user: User = payload.data(999)
         if self.user.ejuser and self.user.ejuser.is_active() is False:
             """Inactive"""
-            ...
+            print('inactive')
         self.navigate(self.pages['main'])
 
     def load_homework(self):

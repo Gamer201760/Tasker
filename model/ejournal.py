@@ -27,7 +27,6 @@ class EJUser(BaseModel):
     def homework(self, date: date) -> list[Item]:
         res = self._get()
         hw_all = self._get_hw(res.text, date)
-
         if len(hw_all) == 0:
             res = self._get(res.url + f'&Week={date.isocalendar().week + 1}')
             hw_all = self._get_hw(res.text, date)
