@@ -15,11 +15,13 @@ class Tasker(QMainWindow):
         uic.loadUi('./ui/main.ui', self)
         self.pages = Pages({
             'login': (0, self.load_user),
-            'main': (1, self.load_homework)
+            'main': (1, self.load_homework),
+            'calendar': (2, None)
         })
 
         self.user_list.clicked.connect(self.user_select)
         self.register_btn.clicked.connect(self.register)
+        self.calendar_btn.clicked.connect(lambda: self.navigate(self.pages['calendar']))
 
         self.user: User
         self.navigate(self.pages['login'])
