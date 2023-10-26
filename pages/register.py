@@ -6,7 +6,7 @@ from pages.notify import NotidyDialog
 from ui.register_dialog import Ui_register_dialog
 
 
-class RegisterDialog(QDialog, Ui_register_dialog):
+class RegisterDialog(Ui_register_dialog, QDialog):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)

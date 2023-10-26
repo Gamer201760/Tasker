@@ -19,9 +19,23 @@ class Task(BaseModel):
         getCur().execute(
             """
             insert into Task(id,text,user_id,deadline,state)
-            values (:id,:text,:user,:deadline,:state);
+            values (:id,:text,:user_id,:deadline,:state);
             """,
             self.model_dump()
+        )
+        getCon().commit()
+
+    @staticmethod
+    def update(payload: list[dict]):
+        getCur().executemany(
+            """
+            update Task
+            set state=:state,
+            text=:text,
+            deadline=:deadline
+            where id=:id;
+            """,
+            payload
         )
         getCon().commit()
 
@@ -30,7 +44,7 @@ class Task(BaseModel):
         return cls(id=id, text=text, user_id=user_id, deadline=deadline, state=state)
 
     @classmethod
-    def getask_by_deadline(cls, user: User, deadline: date) -> list:
+    def gettask_by_deadline(cls, user: User, deadline: date) -> list:
         getCur().execute(
             """
             select * from Task
