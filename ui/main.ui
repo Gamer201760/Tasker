@@ -87,7 +87,7 @@ QPushButton:hover {
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../imgs/sync.svg</normaloff>../imgs/sync.svg</iconset>
+           <normaloff>../img/sync.svg</normaloff>../img/sync.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -107,7 +107,7 @@ QPushButton:hover {
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../imgs/user.svg</normaloff>../imgs/user.svg</iconset>
+           <normaloff>../img/user.svg</normaloff>../img/user.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -124,7 +124,7 @@ QPushButton:hover {
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../imgs/new_task.svg</normaloff>../imgs/new_task.svg</iconset>
+           <normaloff>../img/new_task.svg</normaloff>../img/new_task.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -144,7 +144,7 @@ QPushButton:hover {
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../imgs/calendar.svg</normaloff>../imgs/calendar.svg</iconset>
+           <normaloff>../img/calendar.svg</normaloff>../img/calendar.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -161,7 +161,7 @@ QPushButton:hover {
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../imgs/settings.svg</normaloff>../imgs/settings.svg</iconset>
+           <normaloff>../img/settings.svg</normaloff>../img/settings.svg</iconset>
          </property>
          <property name="iconSize">
           <size>

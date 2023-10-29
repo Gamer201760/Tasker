@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMainWindow
 from core.navigator import Pages, page
 from model.task import Task
 from model.user import User
-from pages.register import RegisterDialog
-from pages.task_dialog import NewTaskDialog
+from page.register import RegisterDialog
+from page.task_dialog import NewTaskDialog
 
 
 class Tasker(QMainWindow):
@@ -58,16 +58,16 @@ class Tasker(QMainWindow):
                 tasks.append(task.model_dump())
         Task.update(payload=tasks)
 
+    def register(self):
+        RegisterDialog().exec_()
+        self.navigate(self.pages['login'])
+
     def select_date(self):
-        self.navigate(self.pages['main'], date=self.sender().selectedDate().toPyDate())
+        self.navigate(self.pages['main'], date=self.sender().selectedDate().toPyDate()) # type: ignore
 
     def new_task(self):
         if self.user:
             NewTaskDialog(user_id=self.user.id).exec_()
-
-    def register(self):
-        RegisterDialog().exec_()
-        self.navigate(self.pages['login'])
 
     def user_select(self, payload: QtCore.QModelIndex):
         self.user: User | None = payload.data(999)

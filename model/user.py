@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field, model_serializer
 
 from core.db import getCon, getCur
 from model.ejournal import EJUser
-from model.token import JWToken
 
 
 class User(BaseModel):
@@ -24,16 +23,16 @@ class User(BaseModel):
         getCon().commit()
 
     @classmethod
-    def _generate_user(cls, id: UUID, username: str, token: str | None, ejname: str | None):
+    def _get_user(cls, id: UUID, username: str, token: str | None, ejname: str | None):
         ejuser = None
         if token and ejname:
-            ejuser = EJUser(token=JWToken(token=token), username=ejname)
+            ejuser = EJUser(token=token, username=ejname)
         return cls(id=id, username=username, ejuser=ejuser)
 
     @classmethod
     def get_all(cls) -> list:
         getCur().execute("""select * from User;""")
-        return list(map(lambda x: cls._generate_user(*x), getCur().fetchall()))
+        return list(map(lambda x: cls._get_user(*x), getCur().fetchall()))
 
     @model_serializer
     def ser_model(self) -> dict:

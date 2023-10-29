@@ -2,15 +2,15 @@ from datetime import date
 
 import requests
 from bs4 import BeautifulSoup
-from pydantic import BaseModel
+from jwt import ExpiredSignatureError, decode
+from pydantic import BaseModel, field_validator
 
 from core.exceptions import UnAuthorized
 from model.item import Item
-from model.token import JWToken
 
 
 class EJUser(BaseModel):
-    token: JWToken | None = None
+    token: str | None = None
     username: str
 
     def login_ej(self, password: str):
@@ -22,7 +22,7 @@ class EJUser(BaseModel):
         token = session.cookies.get('JWToken')
         if token is None:
             raise UnAuthorized(self.username)
-        self.token = JWToken(token=token)
+        self.token = token
 
     def homework(self, date: date) -> list[Item]:
         res = self._get()
@@ -43,7 +43,7 @@ class EJUser(BaseModel):
     def is_active(self) -> bool:
         if self.token is None:
             return False
-        return self.token.active
+        return True
 
     def _get(self, url: str = 'https://elschool.ru/users/diaries/') -> requests.Response:
         return requests.get(
@@ -55,3 +55,14 @@ class EJUser(BaseModel):
         soup = BeautifulSoup(data, 'html.parser')
         return soup.find_all('div', {'data-lesson-date': date.strftime('%d.%m.%Y')})
 
+    @field_validator('token')
+    @classmethod
+    def check_token(cls, token: str):
+        try:
+            decode(token, algorithms=['HS256'], options = {
+                'verify_signature': False,
+                'verify_exp': True
+            })
+            return token
+        except ExpiredSignatureError:
+            return None
