@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QDialog
 
 from model.ejournal import EJUser
 from model.user import User
-from pages.notify import NotidyDialog
+from page.notify import NotidyDialog
 from ui.register_dialog import Ui_register_dialog
 
 
