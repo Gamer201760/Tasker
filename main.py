@@ -18,28 +18,35 @@ class Tasker(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('./ui/main.ui', self)
+        self.setWindowTitle('Tasker')
         self.pages = Pages({
             'login': (0, self.login_page),
             'main': (1, self.main_page),
-            'calendar': (2, self.calendar_page)
+            'calendar': (2, None),
+            'settings': (3, None)
         })
+        self.user: User | None = None
+        self.last_page: page = self.pages['login']
 
+        # Nav bar
+        self.new_task_btn.clicked.connect(self.new_task)
+        self.back_btn.clicked.connect(self.back)
+        self.calendar_btn.clicked.connect(lambda: self.navigate(self.pages['calendar']))
+        self.user_btn.clicked.connect(lambda: self.navigate(self.pages['login']))
+        self.settings_btn.clicked.connect(lambda: self.navigate(self.pages['settings']))
+
+        # Login page
         self.user_list.clicked.connect(self.user_select)
         self.register_btn.clicked.connect(self.register)
 
-        self.new_task_btn.clicked.connect(self.new_task)
-        self.calendar_btn.clicked.connect(lambda: self.navigate(self.pages['calendar']))
-        self.user_btn.clicked.connect(lambda: self.navigate(self.pages['login']))
-
+        # Calendar page
         self.calendar_widget.selectionChanged.connect(self.select_date)
         self.sync_btn.clicked.connect(self.sync)
 
-        self.user: User | None = None
-        self.navigate(self.pages['login'])
+        # Settings page
+        self.delete_btn.clicked.connect(self.delete_user)
 
-    def calendar_page(self):
-        """setup calendar page"""
-        ...
+        self.navigate(self.pages['login'])
 
     def main_page(self, date: date = datetime.now().date()):
         """setup main page"""
@@ -61,6 +68,10 @@ class Tasker(QMainWindow):
                 tasks.append(task.model_dump())
         Task.update(payload=tasks)
 
+    def back(self):
+        """return to back page"""
+        self.navigate(self.last_page)
+
     def register(self):
         RegisterDialog().exec_()
         self.navigate(self.pages['login'])
@@ -71,6 +82,11 @@ class Tasker(QMainWindow):
     def new_task(self):
         if self.user:
             NewTaskDialog(user_id=self.user.id).exec_()
+
+    def delete_user(self):
+        if self.user:
+            self.user.delete()
+            self.navigate(self.pages['login'])
 
     def user_select(self, payload: QtCore.QModelIndex):
         self.user: User | None = payload.data(999)
@@ -106,7 +122,9 @@ class Tasker(QMainWindow):
     def navigate(self, to: page, *args, **kwargs):
         if to[1]:
             to[1](*args, **kwargs)
-        self.stackedWidget.setCurrentIndex(to[0])
+        if self.stackedWidget.currentIndex() != to[0]:
+            self.last_page = tuple(self.pages.values())[self.stackedWidget.currentIndex()] # type: ignore
+            self.stackedWidget.setCurrentIndex(to[0])
 
     def iterAllItems(self):
         for i in range(self.task_list.count()):

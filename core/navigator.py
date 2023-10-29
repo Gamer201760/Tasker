@@ -7,3 +7,4 @@ class Pages(TypedDict):
     main: page
     login: page
     calendar: page
+    settings: page

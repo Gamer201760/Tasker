@@ -35,6 +35,16 @@ class User(BaseModel):
         )
         getCon().commit()
 
+    def delete(self):
+        getCur().execute(
+            """
+            delete from User
+            where id=:id;
+            """,
+            self.model_dump()
+        )
+        getCon().commit()
+
     @classmethod
     def _get_user(cls, id: UUID, username: str, token: str | None, ejname: str | None):
         ejuser = None
