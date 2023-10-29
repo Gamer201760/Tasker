@@ -126,7 +126,7 @@ class Tasker(QMainWindow):
             self.last_page = tuple(self.pages.values())[self.stackedWidget.currentIndex()] # type: ignore
             self.stackedWidget.setCurrentIndex(to[0])
 
-    def iterAllItems(self):
+    def iterAllItems(self): # После трансляции переместить в main_ui.py
         for i in range(self.task_list.count()):
             yield self.task_list.item(i)
 
