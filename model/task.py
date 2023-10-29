@@ -49,7 +49,7 @@ class Task(BaseModel):
             """
             select * from Task
             where user_id=:user AND deadline >= :deadline
-            ORDER BY deadline;
+            ORDER BY state,deadline;
             """,
             {
                 'user': str(user.id),

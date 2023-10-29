@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QDialog
 
 from model.ejournal import EJUser
 from model.user import User
-from page.notify import NotidyDialog
+from page.notify import NotifyDialog
 from ui.register_dialog import Ui_register_dialog
 
 
@@ -14,7 +14,7 @@ class RegisterDialog(Ui_register_dialog, QDialog):
 
     def create(self):
         if self.username.text().strip() == '':
-            NotidyDialog('Имя пользователя не должно быть пустым').exec_()
+            NotifyDialog('Имя пользователя не должно быть пустым').exec_()
             return
         ejuser = None
         if self.username_ej.text().strip() != '' and self.password_ej.text().strip() != '':

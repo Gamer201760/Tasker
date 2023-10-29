@@ -4,9 +4,12 @@ from datetime import date, datetime, timedelta
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMainWindow
 
+from core.exceptions import TaskerException
 from core.navigator import Pages, page
 from model.task import Task
 from model.user import User
+from page.login import LoginDialog
+from page.notify import NotifyDialog
 from page.register import RegisterDialog
 from page.task_dialog import NewTaskDialog
 
@@ -72,26 +75,25 @@ class Tasker(QMainWindow):
     def user_select(self, payload: QtCore.QModelIndex):
         self.user: User | None = payload.data(999)
         if self.user and self.user.ejuser and self.user.ejuser.is_active() is False:
-            """Inactive"""
-            print('inactive')
+            LoginDialog(user=self.user).exec_()
         self.navigate(self.pages['main'])
 
     def load_homework(self, date: date):
         self.task_list.clear()
         self.date_label.setText(date.strftime('%d-%m-%Y'))
-        if self.user and self.user.ejuser:
+        if self.user:
             tasks = Task.gettask_by_deadline(user=self.user, deadline=date)
             for task in tasks:
                 taskw = QListWidgetItem(self.task_list)
                 taskw.setData(999, task)
                 taskw.setText(f'{task.text} {task.deadline.strftime("%d-%m-%Y")}')
                 taskw.setCheckState(QtCore.Qt.CheckState.Checked if task.state else QtCore.Qt.CheckState.Unchecked)
-
-            homeworks = self.user.ejuser.homework(date=date + timedelta(days=1))
-            for homework in homeworks:
-                hwid = QListWidgetItem(self.task_list)
-                hwid.setText(f'{homework.name}: {homework.homework}')
-                hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
+            if self.user.ejuser:
+                homeworks = self.user.ejuser.homework(date=date + timedelta(days=1))
+                for homework in homeworks:
+                    hwid = QListWidgetItem(self.task_list)
+                    hwid.setText(f'{homework.name}: {homework.homework}')
+                    hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
     def load_user(self):
         self.user_list.clear()
@@ -110,8 +112,19 @@ class Tasker(QMainWindow):
         for i in range(self.task_list.count()):
             yield self.task_list.item(i)
 
+
+def except_hook(cls, exception, traceback):
+    if TaskerException in cls.__bases__:
+        error = NotifyDialog(text=str(exception))
+        error.setWindowTitle(cls.__name__)
+        error.exec_()
+        return
+    sys.__excepthook__(cls, exception, traceback)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Tasker()
+    sys.excepthook = except_hook
     ex.show()
     sys.exit(app.exec_())

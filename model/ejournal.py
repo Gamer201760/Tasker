@@ -41,7 +41,7 @@ class EJUser(BaseModel):
         return day
 
     def is_active(self) -> bool:
-        if self.token is None:
+        if self.token == 'invalid':
             return False
         return True
 
@@ -65,4 +65,4 @@ class EJUser(BaseModel):
             })
             return token
         except ExpiredSignatureError:
-            return None
+            return 'invalid'

@@ -3,10 +3,11 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 
 
-class NotidyDialog(QDialog):
+class NotifyDialog(QDialog):
     def __init__(self, text: str, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setupUi()
+        self.setWindowTitle('Notify')
         self.label.setText(text)
 
     def setupUi(self):
