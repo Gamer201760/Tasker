@@ -26,6 +26,7 @@ class Tasker(QMainWindow):
             'settings': (3, None)
         })
         self.user: User | None = None
+        self.date = datetime.now().date()
         self.last_page: page = self.pages['login']
 
         # Nav bar
@@ -52,10 +53,10 @@ class Tasker(QMainWindow):
         self.navigate(self.pages['login'])
 
     # Init pages
-    def main_page(self, date: date = datetime.now().date()):
+    def main_page(self):
         """setup main page"""
         self.navigate_bar.setVisible(True)
-        self.load_tasks(date=date)
+        self.load_tasks()
 
     def login_page(self):
         """setup login page"""
@@ -86,6 +87,7 @@ class Tasker(QMainWindow):
         """add new task"""
         if self.user:
             NewTaskDialog(user_id=self.user.id).exec_()
+            self.navigate(self.pages['main'])
 
     # Connect btn from settings
     def delete_user(self):
@@ -97,7 +99,8 @@ class Tasker(QMainWindow):
     # Selectable
     def select_date(self):
         """select date for display tasks"""
-        self.navigate(self.pages['main'], date=self.sender().selectedDate().toPyDate()) # type: ignore
+        self.set_date(self.sender().selectedDate().toPyDate()) # type: ignore
+        self.navigate(self.pages['main'])
 
     def select_user(self, payload: QtCore.QModelIndex):
         """select user"""
@@ -111,14 +114,15 @@ class Tasker(QMainWindow):
         self.user_list.clear()
         self.show_user(users=User.get_all())
 
-    def load_tasks(self, date: date):
+    def load_tasks(self):
         if self.user:
             self.task_list.clear()
-            self.date_label.setText(date.strftime('%d-%m-%Y'))
-            self.show_task(Task.gettask_by_deadline(user=self.user, deadline=date))
-            self.show_homework(user=self.user, date=date)
+            self.date_label.setText(self.date.strftime('%d-%m-%Y'))
+            self.show_task(Task.gettask_by_deadline(user=self.user, deadline=self.date))
+            self.show_homework(user=self.user)
 
     def load_archive(self):
+        self.last_page = self.pages['main']
         if self.user:
             self.task_list.clear()
             self.date_label.setText('Архив')
@@ -133,9 +137,9 @@ class Tasker(QMainWindow):
             taskw.setText(f'{task.text} {task.deadline.strftime("%d-%m-%Y")}')
             taskw.setCheckState(QtCore.Qt.CheckState.Checked if task.state else QtCore.Qt.CheckState.Unchecked)
 
-    def show_homework(self, user: User, date: date):
+    def show_homework(self, user: User):
         if user.ejuser:
-            homeworks = user.ejuser.homework(date=date + timedelta(days=1))
+            homeworks = user.ejuser.homework(date=self.date + timedelta(days=1))
             for homework in homeworks:
                 hwid = QListWidgetItem(self.task_list)
                 hwid.setText(f'{homework.name}: {homework.homework}')
@@ -157,11 +161,14 @@ class Tasker(QMainWindow):
             self.last_page = tuple(self.pages.values())[self.stackedWidget.currentIndex()] # type: ignore
             self.stackedWidget.setCurrentIndex(to[0])
 
+    def set_date(self, date: date):
+        self.date = date
+
     def iterAllItems(self): # После трансляции переместить в main_ui.py
         for i in range(self.task_list.count()):
             yield self.task_list.item(i)
 
-
+# Catch exceptions
 def except_hook(cls, exception, traceback):
     if TaskerException in cls.__bases__:
         error = NotifyDialog(text=str(exception))
