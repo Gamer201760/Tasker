@@ -39,8 +39,12 @@ class Task(BaseModel):
         )
         getCon().commit()
 
+    @staticmethod
+    def get_task_from_raw(id: UUID, text: str, user_id: UUID, deadline: date, state: bool):
+        return Task(id=id, text=text, user_id=user_id, deadline=deadline, state=state)
+
     @classmethod
-    def gettask_by_deadline(cls, user: User, deadline: date) -> list:
+    def gettask_by_deadline(cls, user: User, deadline: date) -> list[tuple]:
         getCur().execute(
             """
             select * from Task
@@ -55,7 +59,7 @@ class Task(BaseModel):
         return getCur().fetchall()
 
     @classmethod
-    def getarchivedtasks(cls, user: User) -> list:
+    def getarchivedtasks(cls, user: User) -> list[tuple]:
         getCur().execute(
             """
             select * from Task

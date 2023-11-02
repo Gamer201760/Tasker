@@ -45,17 +45,17 @@ class User(BaseModel):
         )
         getCon().commit()
 
-    @classmethod
-    def _get_user(cls, id: UUID, username: str, token: str | None, ejname: str | None):
+    @staticmethod
+    def get_user_from_raw(id: UUID, username: str, token: str | None, ejname: str | None):
         ejuser = None
         if token and ejname:
             ejuser = EJUser(token=token, username=ejname)
-        return cls(id=id, username=username, ejuser=ejuser)
+        return User(id=id, username=username, ejuser=ejuser)
 
     @classmethod
-    def get_all(cls) -> list:
+    def get_all(cls) -> list[tuple]:
         getCur().execute("""select * from User;""")
-        return list(map(lambda x: cls._get_user(*x), getCur().fetchall()))
+        return getCur().fetchall()
 
     @model_serializer
     def ser_model(self) -> dict:

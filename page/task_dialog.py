@@ -13,6 +13,7 @@ class NewTaskDialog(Ui_Task, QDialog):
         super().__init__()
         self.user_id = user_id
         self.setupUi(self)
+        self.setWindowTitle('New Task')
         self.create_btn.clicked.connect(self.create)
 
     def create(self):

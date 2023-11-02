@@ -36,7 +36,7 @@ class Tasker(QMainWindow):
         self.settings_btn.clicked.connect(lambda: self.navigate(self.pages['settings']))
 
         # Login page
-        self.user_list.clicked.connect(self.user_select)
+        self.user_list.clicked.connect(self.select_user)
         self.register_btn.clicked.connect(self.register)
 
         # Calendar page
@@ -51,15 +51,22 @@ class Tasker(QMainWindow):
 
         self.navigate(self.pages['login'])
 
+    # Init pages
     def main_page(self, date: date = datetime.now().date()):
         """setup main page"""
         self.navigate_bar.setVisible(True)
-        self.load_homework(date=date)
+        self.load_tasks(date=date)
 
     def login_page(self):
         """setup login page"""
         self.navigate_bar.setVisible(False)
         self.load_user()
+
+    # Connect btns from bar
+    def register(self):
+        """show register dialog"""
+        RegisterDialog().exec_()
+        self.navigate(self.pages['login'])
 
     def sync(self):
         """synchronizes all tasks"""
@@ -75,62 +82,74 @@ class Tasker(QMainWindow):
         """return to back page"""
         self.navigate(self.last_page)
 
-    def register(self):
-        RegisterDialog().exec_()
-        self.navigate(self.pages['login'])
-
-    def select_date(self):
-        self.navigate(self.pages['main'], date=self.sender().selectedDate().toPyDate()) # type: ignore
-
     def new_task(self):
+        """add new task"""
         if self.user:
             NewTaskDialog(user_id=self.user.id).exec_()
 
+    # Connect btn from settings
     def delete_user(self):
+        """delete user from db"""
         if self.user:
             self.user.delete()
             self.navigate(self.pages['login'])
 
-    def user_select(self, payload: QtCore.QModelIndex):
+    # Selectable
+    def select_date(self):
+        """select date for display tasks"""
+        self.navigate(self.pages['main'], date=self.sender().selectedDate().toPyDate()) # type: ignore
+
+    def select_user(self, payload: QtCore.QModelIndex):
+        """select user"""
         self.user: User | None = payload.data(999)
         if self.user and self.user.ejuser and self.user.ejuser.is_active() is False:
             LoginDialog(user=self.user).exec_()
         self.navigate(self.pages['main'])
 
-    def load_homework(self, date: date):
-        self.task_list.clear()
-        self.date_label.setText(date.strftime('%d-%m-%Y'))
+    # Load from db
+    def load_user(self):
+        self.user_list.clear()
+        self.show_user(users=User.get_all())
+
+    def load_tasks(self, date: date):
         if self.user:
-            self.show_tasks(Task.gettask_by_deadline(user=self.user, deadline=date))
-            if self.user.ejuser:
-                homeworks = self.user.ejuser.homework(date=date + timedelta(days=1))
-                for homework in homeworks:
-                    hwid = QListWidgetItem(self.task_list)
-                    hwid.setText(f'{homework.name}: {homework.homework}')
-                    hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
+            self.task_list.clear()
+            self.date_label.setText(date.strftime('%d-%m-%Y'))
+            self.show_task(Task.gettask_by_deadline(user=self.user, deadline=date))
+            self.show_homework(user=self.user, date=date)
 
     def load_archive(self):
         if self.user:
             self.task_list.clear()
             self.date_label.setText('Архив')
-            self.show_tasks(Task.getarchivedtasks(user=self.user))
+            self.show_task(Task.getarchivedtasks(user=self.user))
 
-    def show_tasks(self, tasks: list):
+    # Show data
+    def show_task(self, tasks: list):
         for task in tasks:
-            task = Task(id=task[0], text=task[1], user_id=task[2], deadline=task[3], state=task[4])
+            task = Task.get_task_from_raw(*task)
             taskw = QListWidgetItem(self.task_list)
             taskw.setData(999, task)
             taskw.setText(f'{task.text} {task.deadline.strftime("%d-%m-%Y")}')
             taskw.setCheckState(QtCore.Qt.CheckState.Checked if task.state else QtCore.Qt.CheckState.Unchecked)
 
-    def load_user(self):
-        self.user_list.clear()
-        for user in User.get_all():
+    def show_homework(self, user: User, date: date):
+        if user.ejuser:
+            homeworks = user.ejuser.homework(date=date + timedelta(days=1))
+            for homework in homeworks:
+                hwid = QListWidgetItem(self.task_list)
+                hwid.setText(f'{homework.name}: {homework.homework}')
+                hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+    def show_user(self, users: list[tuple]):
+        for user in users:
+            user = User.get_user_from_raw(*user)
             userwid = QListWidgetItem(self.user_list)
             userwid.setText(user.username)
             userwid.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             userwid.setData(999, user)
 
+    # Other functions
     def navigate(self, to: page, *args, **kwargs):
         if to[1]:
             to[1](*args, **kwargs)
