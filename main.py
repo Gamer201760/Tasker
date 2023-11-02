@@ -46,6 +46,9 @@ class Tasker(QMainWindow):
         # Settings page
         self.delete_btn.clicked.connect(self.delete_user)
 
+        # Main page
+        self.archive_btn.clicked.connect(self.load_archive)
+
         self.navigate(self.pages['login'])
 
     def main_page(self, date: date = datetime.now().date()):
@@ -98,18 +101,27 @@ class Tasker(QMainWindow):
         self.task_list.clear()
         self.date_label.setText(date.strftime('%d-%m-%Y'))
         if self.user:
-            tasks = Task.gettask_by_deadline(user=self.user, deadline=date)
-            for task in tasks:
-                taskw = QListWidgetItem(self.task_list)
-                taskw.setData(999, task)
-                taskw.setText(f'{task.text} {task.deadline.strftime("%d-%m-%Y")}')
-                taskw.setCheckState(QtCore.Qt.CheckState.Checked if task.state else QtCore.Qt.CheckState.Unchecked)
+            self.show_tasks(Task.gettask_by_deadline(user=self.user, deadline=date))
             if self.user.ejuser:
                 homeworks = self.user.ejuser.homework(date=date + timedelta(days=1))
                 for homework in homeworks:
                     hwid = QListWidgetItem(self.task_list)
                     hwid.setText(f'{homework.name}: {homework.homework}')
                     hwid.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+    def load_archive(self):
+        if self.user:
+            self.task_list.clear()
+            self.date_label.setText('Архив')
+            self.show_tasks(Task.getarchivedtasks(user=self.user))
+
+    def show_tasks(self, tasks: list):
+        for task in tasks:
+            task = Task(id=task[0], text=task[1], user_id=task[2], deadline=task[3], state=task[4])
+            taskw = QListWidgetItem(self.task_list)
+            taskw.setData(999, task)
+            taskw.setText(f'{task.text} {task.deadline.strftime("%d-%m-%Y")}')
+            taskw.setCheckState(QtCore.Qt.CheckState.Checked if task.state else QtCore.Qt.CheckState.Unchecked)
 
     def load_user(self):
         self.user_list.clear()

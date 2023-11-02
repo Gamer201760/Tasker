@@ -40,15 +40,11 @@ class Task(BaseModel):
         getCon().commit()
 
     @classmethod
-    def _generate_task(cls, id: UUID, text: str, user_id: UUID, deadline: date, state: bool):
-        return cls(id=id, text=text, user_id=user_id, deadline=deadline, state=state)
-
-    @classmethod
     def gettask_by_deadline(cls, user: User, deadline: date) -> list:
         getCur().execute(
             """
             select * from Task
-            where user_id=:user AND deadline >= :deadline
+            where user_id=:user AND deadline>=:deadline AND state=false
             ORDER BY state,deadline;
             """,
             {
@@ -56,7 +52,21 @@ class Task(BaseModel):
                 'deadline': deadline
             }
         )
-        return list(map(lambda x: cls._generate_task(*x), getCur().fetchall()))
+        return getCur().fetchall()
+
+    @classmethod
+    def getarchivedtasks(cls, user: User) -> list:
+        getCur().execute(
+            """
+            select * from Task
+            where user_id=:user AND state=true
+            ORDER BY deadline;
+            """,
+            {
+                'user': str(user.id)
+            }
+        )
+        return getCur().fetchall()
 
     @field_serializer('user_id')
     def serialize_user(self, user_id: UUID):
