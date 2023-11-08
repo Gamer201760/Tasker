@@ -42,8 +42,6 @@ class EJUser(BaseModel):
             if text not in day:
                 day.append(Item(name=name, homework=text, date_lesson=date))
         self.homeworks[date] = day
-        if len(self.homeworks) > 5:
-            self.homeworks.pop(list(self.homeworks.items())[1][0])
         return day
 
     def is_active(self) -> bool:
