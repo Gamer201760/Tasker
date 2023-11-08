@@ -39,7 +39,7 @@ class EJUser(BaseModel):
         for hw in hw_all:
             text: str = hw.parent.parent.parent.find('div', {'class': 'diary__homework-text'}).text.strip()
             name: str = hw.parent.parent.parent.find('div', {'class': 'flex-grow-1'}).text[3:].strip()
-            if text not in day:
+            if text not in day or text == '':
                 day.append(Item(name=name, homework=text, date_lesson=date))
         self.homeworks[date] = day
         return day
