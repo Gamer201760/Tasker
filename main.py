@@ -1,7 +1,7 @@
 import sys
 from datetime import date, datetime, timedelta
 
-from PyQt5 import QtCore, uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMainWindow
 
 from core.exceptions import TaskerException
@@ -12,12 +12,13 @@ from page.login import LoginDialog
 from page.notify import NotifyDialog
 from page.register import RegisterDialog
 from page.task_dialog import NewTaskDialog
+from ui.main_ui import Ui_MainWindow
 
 
-class Tasker(QMainWindow):
+class Tasker(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('./ui/main.ui', self)
+
         self.setWindowTitle('Tasker')
         self.pages = Pages({
             'login': (0, self.login_page),
@@ -164,9 +165,6 @@ class Tasker(QMainWindow):
     def set_date(self, date: date):
         self.date = date
 
-    def iterAllItems(self): # После трансляции переместить в main_ui.py
-        for i in range(self.task_list.count()):
-            yield self.task_list.item(i)
 
 # Catch exceptions
 def except_hook(cls, exception, traceback):

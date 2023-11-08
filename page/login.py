@@ -12,9 +12,9 @@ class LoginDialog(Ui_Login, QDialog):
         self.setupUi(self)
         self.user = user
         self.setWindowTitle('Login')
-        self.register_btn.clicked.connect(self.create)
+        self.register_btn.clicked.connect(self.login)
 
-    def create(self):
+    def login(self):
         if self.username_ej.text().strip() == '' or self.password_ej.text().strip() == '':
             NotifyDialog('Имя пользователя и пароль не должны быть пустыми').exec_()
             return
