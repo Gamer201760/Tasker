@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMainWindow
 
+import ui.img_qr  # noqa: F401
 from core.exceptions import TaskerException
 from core.navigator import Pages, page
 from model.task import Task
@@ -18,7 +19,7 @@ from ui.main_ui import Ui_MainWindow
 class Tasker(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
-
+        self.setupUi(self)
         self.setWindowTitle('Tasker')
         self.pages = Pages({
             'login': (0, self.login_page),
@@ -26,6 +27,7 @@ class Tasker(Ui_MainWindow, QMainWindow):
             'calendar': (2, None),
             'settings': (3, None)
         })
+
         self.user: User | None = None
         self.date = datetime.now().date()
         self.last_page: page = self.pages['login']

@@ -3,3 +3,7 @@ tasker.db
 .env
 .ruff_cache
 __pycache__
+build
+dist
+main.spec
+images.qrc
