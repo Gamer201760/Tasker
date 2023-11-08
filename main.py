@@ -58,8 +58,8 @@ class Tasker(Ui_MainWindow, QMainWindow):
     # Init pages
     def main_page(self):
         """setup main page"""
-        self.navigate_bar.setVisible(True)
         self.load_tasks()
+        self.navigate_bar.setVisible(True)
 
     def login_page(self):
         """setup login page"""
@@ -176,7 +176,7 @@ def except_hook(cls, exception, traceback):
         error.exec_()
         return
     sys.__excepthook__(cls, exception, traceback)
-
+    exit(1)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

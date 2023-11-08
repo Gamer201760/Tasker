@@ -23,3 +23,6 @@ class Item(BaseModel):
         if str(other) == str(self):
             return True
         return False
+
+    def __hash__(self) -> int:
+        return self.homework.__hash__()

@@ -12,7 +12,7 @@ from model.item import Item
 class EJUser(BaseModel):
     token: str | None = None
     username: str
-    homeworks: dict[date, list[Item]] = Field(default_factory=dict)
+    homeworks: dict[date, set[Item]] = Field(default_factory=dict)
 
     def login_ej(self, password: str):
         with requests.Session() as session:
@@ -25,7 +25,7 @@ class EJUser(BaseModel):
             raise UnAuthorized(self.username)
         self.token = token
 
-    def homework(self, date: date) -> list[Item]:
+    def homework(self, date: date) -> set[Item]:
         hw = self.homeworks.get(date)
         if hw is not None:
             return hw
@@ -35,12 +35,11 @@ class EJUser(BaseModel):
             res = self._get(res.url + f'&Week={date.isocalendar().week + 1}')
             hw_all = self._get_hw(res.text, date)
 
-        day: list[Item] = []
+        day: set[Item] = set()
         for hw in hw_all:
             text: str = hw.parent.parent.parent.find('div', {'class': 'diary__homework-text'}).text.strip()
             name: str = hw.parent.parent.parent.find('div', {'class': 'flex-grow-1'}).text[3:].strip()
-            if text not in day or text == '':
-                day.append(Item(name=name, homework=text, date_lesson=date))
+            day.add(Item(name=name, homework=text, date_lesson=date))
         self.homeworks[date] = day
         return day
 
