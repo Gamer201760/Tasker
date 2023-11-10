@@ -25,4 +25,4 @@ class Item(BaseModel):
         return False
 
     def __hash__(self) -> int:
-        return self.homework.__hash__()
+        return self.name.__hash__()
